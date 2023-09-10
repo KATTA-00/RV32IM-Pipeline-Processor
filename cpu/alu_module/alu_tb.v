@@ -1,7 +1,6 @@
 `timescale 1ns/100ps
 `include "alu.v"
 
-
 module alu_tb;
 
     reg signed [31:0] data1, data2;
