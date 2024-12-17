@@ -1,7 +1,7 @@
 `timescale 1ns/100ps
 `include "../utils/encordings.v"
-// ALU module
 
+// ALU module
 module alu(DATA1, DATA2, SELECT, RESULT);
 
     // initailize input ports
