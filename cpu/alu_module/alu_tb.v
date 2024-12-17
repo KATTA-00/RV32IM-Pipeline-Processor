@@ -7,7 +7,7 @@ module alu_tb;
     reg [4:0] select;
     wire signed [31:0] result;
 
-    alu myalu(data1, data2, select, result);
+    alu test_alu(data1, data2, select, result);
 
     initial begin
         data1 = 1;
@@ -23,8 +23,6 @@ module alu_tb;
         data1 = 4;
         data2 = -2;
         select = 14;
-
-
     end
 
 
