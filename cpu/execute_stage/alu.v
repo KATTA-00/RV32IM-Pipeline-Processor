@@ -1,5 +1,5 @@
-`timescale 1ns/100ps
 `include "../utils/encordings.v"
+`timescale 1ns/100ps
 
 // ALU module
 module alu(DATA1, DATA2, SELECT, RESULT);

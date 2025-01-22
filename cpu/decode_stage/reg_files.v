@@ -1,4 +1,4 @@
-module reg(clk, rst, addr1, addr2, data1, data2, we, wd, waddr);
+module reg_files(clk, rst, addr1, addr2, data1, data2, we, wd, waddr);
     input clk, rst, we;
     input [4:0] waddr, addr1, addr2;
     input [31:0] wd;

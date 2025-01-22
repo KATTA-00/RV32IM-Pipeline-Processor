@@ -1,6 +1,6 @@
 `include "../utils/encodings.v"
 
-module sign_ext(imm, imm_ext, imm_sel);
+module sign_extend(imm, imm_ext, imm_sel);
     input [24:0] imm;
     output [31:0] imm_ext;
     input [2:0] imm_sel;

@@ -12,7 +12,7 @@ module imem(clk, rst, pc, instr);
 
     always @(posedge clk) begin
         if (rst == 1'b1) begin
-            instr <= 32'h0;
+            instr <= 32'dx;
         end
         else begin
             instr <= mem[pc[31:2]];
