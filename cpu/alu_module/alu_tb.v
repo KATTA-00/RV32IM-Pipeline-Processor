@@ -12,17 +12,17 @@ module alu_tb;
     initial begin
         data1 = 1;
         data2 = 2;
-        select = 0;
+        select = 1;
 
         #10
         data1 = 5;
         data2 = 2;
-        select = 0;
+        select = 1;
 
         #10
         data1 = 4;
         data2 = -2;
-        select = 14;
+        select = 2;
     end
 
 

@@ -1,9 +1,9 @@
-`timescale 1ps/1ps
 `include "pc.v"
 `include "pc_mux.v"
 `include "pc_adder.v"
-`include "fetch_reg.v"
+`include "if_id_pipeline_reg.v"
 `include "imem.v"
+`timescale 1ps/1ps
 
 module fetch_cycle_tb;
     reg clk, rst, pc_sel_ex;
@@ -32,7 +32,7 @@ module fetch_cycle_tb;
         .pc(pc_out), 
         .instr(instr_out)
     );    
-    fetch_reg fetch_reg(
+    if_id_pipeline_reg if_id_pipeline_reg(
         .clk(clk), 
         .rst(rst), 
         .pc_in(pc_out), 
