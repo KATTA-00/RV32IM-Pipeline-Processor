@@ -18,3 +18,10 @@
 `define DIVU 5'b10000
 `define REM 5'b10001
 `define REMU 5'b10010
+
+// immediate encoding of the values of the type
+`define I_TYPE = 3'b000
+`define S_TYPE = 3'b001
+`define B_TYPE = 3'b010
+`define U_TYPE = 3'b011
+`define J_TYPE = 3'b100
