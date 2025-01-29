@@ -1,17 +1,17 @@
-`include "../../utils/encordings.v"
+`include "../utils/encordings.v"
 
 module branch_logic (
-    input wire [31:0] rs1,
-    input wire [31:0] rs2,
-    input wire [3:0] branch,
-    output wire pc_sel_ex
+    input wire [31:0] data1,
+    input wire [31:0] data2,
+    input wire [2:0] op,
+    output wire out
 );
 
-    assign pc_sel_ex = branch == `BEQ && rs1 == rs2 ||
-                       branch == `BNE && rs1 != rs2 ||
-                       branch == `BLT && rs1 < rs2 ||
-                       branch == `BGE && rs1 >= rs2 ||
-                       branch == `BLTU && $unsigned(rs1) < $unsigned(rs2) ||
-                       branch == `BGEU && $unsigned(rs1) >= $unsigned(rs2);
+    assign out = op == `BEQ && data1 == data2 ||
+                       op == `BNE && data1 != data2 ||
+                       op == `BLT && data1 < data2 ||
+                       op == `BGE && data1 >= data2 ||
+                       op == `BLTU && $unsigned(data1) < $unsigned(data2) ||
+                       op == `BGEU && $unsigned(data1) >= $unsigned(data2);
     
 endmodule
