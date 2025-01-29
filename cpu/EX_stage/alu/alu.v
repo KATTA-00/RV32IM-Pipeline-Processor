@@ -1,4 +1,5 @@
 `include "../utils/encordings.v"
+`timescale 1ns/100ps
 
 // ALU module
 module alu(DATA1, DATA2, SELECT, RESULT);
@@ -40,6 +41,9 @@ module alu(DATA1, DATA2, SELECT, RESULT);
 
     always @(*) 
     begin
+
+        $display("DATA1 = %h, DATA2 = %h, SELECT = %h", DATA1, DATA2, SELECT);
+
         case(SELECT)
 
             `FORWARD: RESULT = forwardData;

@@ -3,6 +3,7 @@
 `include "../pipeline_regs/ex_mem_pipeline_reg.v"
 `include "../utils/mux_32b_2to1.v"
 `include "../utils/encordings.v"
+`timescale 1ns/100ps
 
 module EX_stage_tb ();
     reg clk, rst, data1alusel_ex_out, data2alusel_ex_out, reg_write_en_ex_out;
@@ -16,8 +17,8 @@ module EX_stage_tb ();
     wire branch_logic_out;
 
     mux_32b_2to1 data1_mux (
-        .a(pc_ex_out),
-        .b(data1_ex_out),
+        .a(data1_ex_out),
+        .b(pc_ex_out),
         .sel(data1alusel_ex_out),
         .out(data1_mux_out)
     );
@@ -94,7 +95,7 @@ module EX_stage_tb ();
         aluop_ex_out = `ADD; // Assuming 5'b00000 is the opcode for ADD
         #10;
         $display("Test case 1: ALU ADD operation");
-        $display("data1_ex_out = %h, data2_ex_out = %h, alu_res_out = %h", data1_ex_out, data2_ex_out, alu_res_out);
+        $display("data1_ex_out = %h, data2_ex_out = %h, alu_res_out = %h", data1_mux_out, data2_ex_out, alu_res_out);
 
         // Test case 2: ALU operation with immediate (SUB)
         #10;
