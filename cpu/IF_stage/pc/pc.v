@@ -1,3 +1,5 @@
+`timescale 1ns/100ps
+
 module pc(clk, rst, pc_in, pc_out);
     input clk, rst;
     input [31:0] pc_in;
