@@ -7,11 +7,12 @@ module branch_logic (
     output wire out
 );
 
-    assign out = op == `BEQ && data1 == data2 ||
-                       op == `BNE && data1 != data2 ||
-                       op == `BLT && data1 < data2 ||
-                       op == `BGE && data1 >= data2 ||
-                       op == `BLTU && $unsigned(data1) < $unsigned(data2) ||
-                       op == `BGEU && $unsigned(data1) >= $unsigned(data2);
+    assign out = (op == `BEQ && (data1 == data2)) ||
+                       (op == `BNE && (data1 != data2)) ||
+                       (op == `BLT && (data1 < data2)) ||
+                       (op == `BGE && (data1 >= data2)) ||
+                       (op == `BLTU && ($unsigned(data1) < $unsigned(data2))) ||
+                       (op == `BGEU && ($unsigned(data1) >= $unsigned(data2))) ||
+                       op == `JAL_JALR;
     
 endmodule

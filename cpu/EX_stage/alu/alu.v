@@ -43,7 +43,6 @@ module alu(DATA1, DATA2, SELECT, RESULT);
     begin
         case(SELECT)
 
-            `FORWARD: RESULT = forwardData;
             `ADD: RESULT = addData;
             `SUB: RESULT = subData;
             `SLL: RESULT = sllData;
@@ -62,6 +61,7 @@ module alu(DATA1, DATA2, SELECT, RESULT);
             `DIVU: RESULT = divuData;
             `REM: RESULT = remData;
             `REMU: RESULT = remuData;
+            `FORWARD: RESULT = forwardData;
 
             default RESULT = 0;
 
