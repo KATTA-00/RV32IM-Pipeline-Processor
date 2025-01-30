@@ -54,5 +54,3 @@
 `define OP_AUIPC    7'b0010111
 `define OP_SYSTEM   7'b1110011
 
-// RV32M Multiply Extension Opcode (Same as R-Type)
-`define OP_RV32M    7'b0110011

@@ -1,4 +1,5 @@
-`include "../utils/encodings.v"
+`include "../utils/encordings.v"
+`timescale 1ns/100ps
 
 module immediate_select(inst, imm_sel, imm_ext);
 
@@ -21,35 +22,35 @@ assign TYPE6 = inst[29:25];
 always @(*) begin
     case (imm_sel[2:0])
         // TYPE 1 
-        IMM_TYPE1:
+        `IMM_TYPE1:
                 imm_ext = {TYPE1, {12{1'b0}}};
         // TYPE 2 
-        IMM_TYPE2:
+        `IMM_TYPE2:
             if (imm_sel[3] == 1'b1) 
                 imm_ext = {{11{1'b0}}, TYPE2, 1'b0};
             else
                 // TODO
                 imm_ext = {{11{inst[31]}}, inst[31], inst[19:12], inst[20], inst[30:21], 1'b0}; //{{11{TYPE2[19]}}, TYPE2, 1'b0};
         // TYPE 3 
-        IMM_TYPE3:
+        `IMM_TYPE3:
             if (imm_sel[3] == 1'b1) 
                 imm_ext = {{20{1'b0}}, TYPE3};
             else
                 imm_ext = {{20{TYPE3[11]}}, TYPE3};
         // TYPE 4 
-        IMM_TYPE4:
+        `IMM_TYPE4:
             if (imm_sel[3] == 1'b1) 
                 imm_ext = {{20{1'b0}}, inst[31], inst[7], inst[30:25], inst[11:8], 1'b0};
             else
                 imm_ext = {{20{inst[31]}}, inst[31], inst[7], inst[30:25], inst[11:8], 1'b0};
         // TYPE 5 
-        IMM_TYPE5:
+        `IMM_TYPE5:
             if (imm_sel[3] == 1'b1) 
                 imm_ext = {{20{1'b0}}, TYPE5};
             else
                 imm_ext = {{20{TYPE5[11]}}, TYPE5};
         // TYPE 6 
-        IMM_TYPE6:
+        `IMM_TYPE6:
             imm_ext = {{27{1'b0}}, TYPE6};
     endcase
 end
