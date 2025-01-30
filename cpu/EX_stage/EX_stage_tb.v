@@ -63,7 +63,8 @@ module EX_stage_tb ();
         .read_data2_mem_out(),
         .imm_mem_out(),
         .dest_addr_mem_out(),
-        .read_write_mem_out(),
+        .mem_read_mem_out(),
+        .mem_write_mem_out(),
         .WB_sel_mem_out()
     );
 
@@ -84,7 +85,8 @@ module EX_stage_tb ();
         dest_addr_ex_out = 5'b00000;
         aluop_ex_out = 5'b00000;
         branch_jump_ex_out = 3'b000;
-        read_write_ex_out = 4'b0000;
+        mem_write_ex_out = 3'b000;
+        mem_read_ex_out = 4'b0000;
         WB_sel_ex_out = 2'b00;
 
         // Release reset after a few clock cycles

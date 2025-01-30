@@ -31,8 +31,8 @@ module ex_mem_pipeline_reg(
             alu_result_mem_out <= alu_result_ex_in;
             read_data2_mem_out <= read_data2_ex_in;
             imm_mem_out <= imm_ex_in;
-            mem_read_mem_out <= mem_read_mem_in;
-            mem_write_mem_out <= mem_write_mem_in;
+            mem_read_mem_out <= mem_read_ex_in;
+            mem_write_mem_out <= mem_write_ex_in;
             WB_sel_mem_out <= WB_sel_ex_in;
         end
     end

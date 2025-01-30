@@ -41,9 +41,6 @@ module alu(DATA1, DATA2, SELECT, RESULT);
 
     always @(*) 
     begin
-
-        $display("DATA1 = %h, DATA2 = %h, SELECT = %h", DATA1, DATA2, SELECT);
-
         case(SELECT)
 
             `FORWARD: RESULT = forwardData;
