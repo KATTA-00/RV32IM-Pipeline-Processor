@@ -10,7 +10,8 @@ module EX_stage_tb ();
     reg [31:0] pc_ex_out, data1_ex_out, data2_ex_out, imm_ex_out;
     reg [4:0] dest_addr_ex_out, aluop_ex_out;
     reg [2:0] branch_jump_ex_out;
-    reg [3:0] read_write_ex_out;
+    reg [2:0] mem_write_ex_out;
+    reg [3:0] mem_read_ex_out;
     reg [1:0] WB_sel_ex_out;
 
     wire [31:0] data1_mux_out, data2_mux_out, alu_res_out;
@@ -53,7 +54,8 @@ module EX_stage_tb ();
         .read_data2_ex_in(data2_mux_out),
         .imm_ex_in(imm_ex_out),
         .dest_addr_ex_in(dest_addr_ex_out),
-        .read_write_ex_in(read_write_ex_out),
+        .mem_read_ex_in(mem_read_ex_out),
+        .mem_write_ex_in(mem_write_ex_out),
         .WB_sel_ex_in(WB_sel_ex_out),
         .reg_write_mem_out(),
         .pc_mem_out(),
