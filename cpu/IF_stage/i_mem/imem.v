@@ -7,7 +7,7 @@ module imem(clk, rst, pc, instr);
     reg [31:0] mem[0:1023];
 
     initial begin
-        $readmemh("memfile.mem", mem);
+        $readmemh("./I_mem/memfile.mem", mem);
     end
 
     always @(posedge clk) begin

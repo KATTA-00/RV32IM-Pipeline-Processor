@@ -1,32 +1,30 @@
-`include "pc.v"
-`include "pc_mux.v"
-`include "pc_adder.v"
-`include "../pipeline_regs/if_id_pipeline_reg.v"
-`include "../utils/mux_32b_2to1.v"
-`include "../utils/adder_32b_4.v"
-`include "imem.v"
+`include "./IF_stage/pc/pc.v"
+`include "./pipeline_regs/if_id_pipeline_reg.v"
+`include "./utils/mux_32b_2to1.v"
+`include "./utils/adder_32b_4.v"
+`include "./IF_stage/i_mem/imem.v"
 `timescale 1ns/100ps
 
 module fetch_stage_tb;
     reg clk, rst, pc_sel_ex;
-    reg [31:0] pc_ex;
+    wire [31:0] pc_ex;
     wire [31:0] pc_mux_out, pc_out, pc_next, instr_out, pc_out_dec, instr_out_dec;
 
-    pc pc(
+    pc pc_(
         .clk(clk), 
         .rst(rst), 
         .pc_in(pc_mux_out), 
         .pc_out(pc_out)
     );
 
-    pc_mux mux_32b_2to1(
-        .a(pc_out), 
+    mux_32b_2to1 pc_mux(
+        .a(pc_ex), 
         .b(pc_ex), 
         .sel(pc_sel_ex), 
         .out(pc_mux_out)
     );
 
-    pc_adder adder_32b_4(
+    adder_32b_4 pc_adder(
         .data(pc_out), 
         .out(pc_ex)
     );
@@ -53,7 +51,6 @@ module fetch_stage_tb;
         clk = 1'b0;
         rst = 1'b0;
         pc_sel_ex = 1'b0;
-        pc_ex = 32'h0;
         #5
         rst = 1'b1;
         #10

@@ -1,3 +1,5 @@
+`timescale 1ns/100ps
+
 module mux_32b_4to1(
     input [31:0] a,  // 32-bit input A
     input [31:0] b,  // 32-bit input B
@@ -11,7 +13,6 @@ module mux_32b_4to1(
     assign out = (sel == 2'b00) ? a :
                  (sel == 2'b01) ? b :
                  (sel == 2'b10) ? c :
-                 (sel == 2'b11) ? d :
-                 32'b0; // Default case (optional, can be omitted)
+                 (sel == 2'b11) ? d;
 
 endmodule

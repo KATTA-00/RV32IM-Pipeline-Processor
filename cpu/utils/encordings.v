@@ -1,3 +1,5 @@
+`timescale 1ns/100ps
+
 // ALU
 `define ADD 5'b00000
 `define SUB 5'b10000

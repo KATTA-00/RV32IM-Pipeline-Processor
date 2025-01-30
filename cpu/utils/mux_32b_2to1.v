@@ -1,3 +1,5 @@
+`timescale 1ns/100ps
+
 module mux_32b_2to1(
     input [31:0] a,
     input [31:0] b,
