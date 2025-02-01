@@ -1,3 +1,5 @@
+`timescale 1ns/100ps
+
 module id_ex_pipeline_reg(
     input clk, rst,
     input reg_write_en_id_in, data1_alu_sel_id_in, data2_alu_sel_id_in,
@@ -6,6 +8,7 @@ module id_ex_pipeline_reg(
     input [2:0] mem_write_id_in, branch_jump_id_in,
     input [3:0] mem_read_id_in,
     input [1:0] wb_sel_id_in,
+    input busywait,
     output reg reg_write_en_ex_out, data1_alu_sel_ex_out, data2_alu_sel_ex_out,
     output reg [31:0] pc_ex_out, read_data1_ex_out, read_data2_ex_out, imm_ex_out,
     output reg [4:0] dest_addr_ex_out, aluop_ex_out,
@@ -16,6 +19,7 @@ module id_ex_pipeline_reg(
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
+            #1
             reg_write_en_ex_out <= 0;
             data1_alu_sel_ex_out <= 0;
             data2_alu_sel_ex_out <= 0;
@@ -30,6 +34,8 @@ module id_ex_pipeline_reg(
             mem_read_ex_out <= 0;
             wb_sel_ex_out <= 0;
         end else begin
+            if (!busywait) begin
+            #1
             reg_write_en_ex_out <= reg_write_en_id_in;
             data1_alu_sel_ex_out <= data1_alu_sel_id_in;
             data2_alu_sel_ex_out <= data2_alu_sel_id_in;
@@ -43,6 +49,7 @@ module id_ex_pipeline_reg(
             branch_jump_ex_out <= branch_jump_id_in;
             mem_read_ex_out <= mem_read_id_in;
             wb_sel_ex_out <= wb_sel_id_in;
+            end
         end
     end
 
