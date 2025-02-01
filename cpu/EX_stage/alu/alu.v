@@ -1,4 +1,4 @@
-`include "../utils/encordings.v"
+`include "./utils/encordings.v"
 `timescale 1ns/100ps
 
 // ALU module

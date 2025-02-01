@@ -11,7 +11,6 @@ wire [19:0] TYPE1, TYPE2;
 wire [11:0] TYPE3, TYPE4, TYPE5;
 wire [4:0] TYPE6;
 
-
 // TODO: Check the combinations
 assign TYPE1 = inst[31:12];
 assign TYPE2 = inst[31:12];

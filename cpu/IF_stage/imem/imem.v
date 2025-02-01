@@ -1,3 +1,5 @@
+`timescale 1ns/100ps
+
 // instruction memmory with memfile
 module imem(clk, rst, pc, instr);
     input clk, rst;
@@ -7,7 +9,7 @@ module imem(clk, rst, pc, instr);
     reg [31:0] mem[0:1023];
 
     initial begin
-        $readmemh("./I_mem/memfile.mem", mem);
+        $readmemh("./IF_stage/imem/memfile.mem", mem);
     end
 
     always @(posedge clk) begin

@@ -1,4 +1,4 @@
-`include "../utils/encordings.v"
+`include "./utils/encordings.v"
 
 module branch_logic (
     input wire [31:0] data1,

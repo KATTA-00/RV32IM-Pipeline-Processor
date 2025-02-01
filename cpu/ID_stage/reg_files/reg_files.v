@@ -22,5 +22,4 @@ module reg_files(clk, rst, addr1, addr2, data1, data2, we, wd, waddr);
         end
     end
 
-
 endmodule
