@@ -1,7 +1,7 @@
 `include "./utils/encordings.v"
 `timescale 1ns/100ps
 
-module immediate_select(inst, imm_sel, imm_ext);
+module sign_extender(inst, imm_sel, imm_ext);
 
 input [31:0] inst;
 input [3:0] imm_sel;

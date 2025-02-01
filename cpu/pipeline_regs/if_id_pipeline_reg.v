@@ -1,6 +1,6 @@
 `timescale 1ns/100ps
 
-module if_id_pipeline_reg(clk, rst, pc_in, pc_out, instr_in, instr_out);
+module if_id_pipeline_reg(clk, rst, pc_in, pc_out, instr_in, instr_out, busywait);
     input clk, rst;
     input [31:0] pc_in, instr_in;
     input busywait;
