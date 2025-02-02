@@ -19,13 +19,17 @@ module cpu(
     input CLK,
     input RST,
     input [31:0] DMEM_DATA_READ_MA,
+    input BUSYWAIT_IN,
     output [31:0] PC_IF,
     output [31:0] DMEM_ADDR_MA,
     output [31:0] DMEM_DATA_WRITE_MA,
     output [3:0] DMEM_READ_MA,
-    output [2:0] DMEM_WRITE_MA
+    output [2:0] DMEM_WRITE_MA,
+    output BUSYWAIT_OUT
 );
     wire BUSYWAIT;
+
+    assign BUSYWAIT = BUSYWAIT_IN;
 
     ////////////////////////////////////////////////////////////////////////
     // Stage 1: Instruction Fetch (IF) 
@@ -66,6 +70,10 @@ module cpu(
         .busywait(BUSYWAIT)
     );
 
+    // always @(posedge CLK) begin
+    //     $display("[IF] PC: %h, Instruction: %h", PC_IF, INST_IF);
+    // end
+
     ////////////////////////////////////////////////////////////////////////
     // Stage 2: Instruction Decode (ID)
 
@@ -74,7 +82,7 @@ module cpu(
     wire [4:0] ALU_OP_ID;
     wire [2:0] MEM_WRITE_ID;
     wire [3:0] MEM_READ_ID;
-    wire [2:0] BRANCH_JUMP_ID;
+    wire [3:0] BRANCH_JUMP_ID;
     wire [1:0] WB_SEL_ID;
     wire DATA1_ALU_SEL_ID, DATA2_ALU_SEL_ID, WRITE_EN_ID;
 
@@ -116,6 +124,10 @@ module cpu(
         .reset(RST)
     );
 
+    // always @(posedge CLK) begin
+    //     $display("[ID] PC: %h, RS1: %h, RS2: %h, IMM: %h, ALU_OP: %b", PC_ID, DATA1_ID, DATA2_ID, IMM_ID, ALU_OP_ID);
+    // end
+
     // IF/ID pipeline register
     id_ex_pipeline_reg id_ex_pipeline_reg_inst(
         .clk(CLK),
@@ -156,7 +168,8 @@ module cpu(
     wire [31:0] NEXT_PC_EX, PC_EX, DATA1_EX, DATA2_EX, IMM_EX, ALU_OUT_EX, ALU_DATA1_EX, ALU_DATA2_EX;
     wire [3:0] IMM_SEL_EX;
     wire [4:0] ALU_OP_EX, WADDR_EX;
-    wire [2:0] MEM_WRITE_EX, BRANCH_JUMP_EX;
+    wire [2:0] MEM_WRITE_EX;
+    wire [3:0] BRANCH_JUMP_EX;
     wire [3:0] MEM_READ_EX;
     wire [1:0] WB_SEL_EX;
     wire DATA1_ALU_SEL_EX, DATA2_ALU_SEL_EX, WRITE_EN_EX;
@@ -274,10 +287,10 @@ module cpu(
 
     // WB mux
     mux_32b_4to1 wb_mux(
-        .data1(ALU_OUT_WB),
-        .data2(DMEM_DATA_READ_WB),
-        .data3(PC_WB),
-        .data4(IMM_WB),
+        .data1(DMEM_DATA_READ_WB),
+        .data2(ALU_OUT_WB),
+        .data3(IMM_WB),
+        .data4(PC_WB),
         .out(WRITE_DATA_WB),
         .sel(WB_SEL_WB)
     );

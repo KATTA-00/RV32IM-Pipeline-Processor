@@ -16,8 +16,8 @@ module ex_mem_pipeline_reg(
     output reg [1:0] wb_sel_out
 );
     always @(posedge clk or posedge rst) begin
+        #1
         if (rst) begin
-            #1
             reg_write_out <= 1'b0;
             dest_addr_out <= 32'b0;
             pc_out <= 32'b0;
@@ -30,7 +30,6 @@ module ex_mem_pipeline_reg(
         end
         else begin
             if (!busywait) begin
-            #1
             reg_write_out <= reg_write_in;
             dest_addr_out <= dest_addr_in;
             pc_out <= pc_in;

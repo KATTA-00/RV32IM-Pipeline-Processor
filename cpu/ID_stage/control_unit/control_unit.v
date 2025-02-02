@@ -20,7 +20,7 @@ module control_unit(opcode, funct3, funct7, alu_op, reg_write_en, mem_write, mem
     output wire [4:0] alu_op;
     output wire [2:0] mem_write;
     output wire [3:0] mem_read;
-    output wire [2:0] branch_jump;
+    output wire [3:0] branch_jump;
     output wire [3:0] imm_sel;
     output wire [1:0] wb_sel; 
 
@@ -48,7 +48,8 @@ module control_unit(opcode, funct3, funct7, alu_op, reg_write_en, mem_write, mem
     assign #3 mem_read[2:0] = funct3;
 
     // branch control signal generation
-    assign #3 branch_jump = ((opcode == `OP_JALR) || (opcode == `OP_JAL))?3'b010:funct3; // if JAL or JALR = 010 else funct3 
+    assign #3 branch_jump[3] = (opcode == `OP_JALR) | (opcode == `OP_JAL) |  (opcode == `OP_BRANCH); // if  JAL, JALR or B_inst
+    assign #3 branch_jump[2:0] = ((opcode == `OP_JALR) || (opcode == `OP_JAL))?3'b010:funct3; // if JAL or JALR = 010 else funct3 
     
     // Immediate select signal genaration
     assign #3 imm_sel[3] = ({opcode, funct3} == {`OP_LOAD, 3'b100}) | 

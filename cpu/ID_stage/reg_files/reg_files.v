@@ -13,17 +13,19 @@ module reg_files(clk, rst, addr1, addr2, data1, data2, we, wd, waddr);
     assign #1 data2 = mem[addr2];
 
     always @(posedge clk) begin
+        #1
         if(rst == 1'b1) begin
             #1
             for(i = 0; i < 32; i = i + 1) begin
-                mem[i] <= 32'bx;
+                mem[i] <= 32'b0;
             end
         end
         else if(we == 1'b1) begin
-            #2
-            $display($time, "Writing to register %d", waddr);
-            mem[waddr] <= wd;
+            #2 mem[waddr] <= wd;
         end
+
+        $display("Registers: %d %d %d %d %d %d \n", mem[0], mem[1], mem[2], mem[3], mem[4], mem[5]);
+
     end
 
 endmodule

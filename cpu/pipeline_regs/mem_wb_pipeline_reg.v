@@ -14,8 +14,8 @@ module mem_wb_pipeline_reg(
 );
 
     always @(posedge clk or posedge rst) begin
+        #1
         if (rst) begin
-            #1
             reg_write_out <= 1'b0;
             pc_out <= 32'b0;
             mem_data_out <= 32'b0;
@@ -25,7 +25,6 @@ module mem_wb_pipeline_reg(
             wb_sel_out <= 2'b0;
         end else begin
             if (!busywait) begin
-            #1
             reg_write_out <= reg_write_in;
             pc_out <= pc_in;
             mem_data_out <= mem_data_in;
