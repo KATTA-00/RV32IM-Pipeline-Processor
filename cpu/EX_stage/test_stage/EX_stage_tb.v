@@ -1,7 +1,7 @@
 `include "../alu/alu.v"
 `include "../branch/branch_logic.v"
 `include "../../pipeline_regs/ex_mem_pipeline_reg.v"
-`include "../../utils/mux_32b_2to1.v"
+`include "../../utils/muxs/mux_32b_2to1.v"
 `include "../../utils/encordings.v"
 `timescale 1ns/100ps
 

@@ -1,4 +1,4 @@
-`include "./utils/mux_3b_2to1.v"
+`include "./utils/muxs/mux_3b_2to1.v"
 `include "./utils/encordings.v"
 `timescale 1ns/100ps
 

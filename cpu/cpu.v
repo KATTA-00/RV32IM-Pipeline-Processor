@@ -1,6 +1,6 @@
 `include "IF_stage/pc/pc.v"
-`include "utils/mux_32b_2to1.v"
-`include "utils/adder_32b_4.v"
+`include "utils/muxs/mux_32b_2to1.v"
+`include "utils/adders/adder_32b_4.v"
 `include "pipeline_regs/if_id_pipeline_reg.v"
 `include "pipeline_regs/id_ex_pipeline_reg.v"
 `include "pipeline_regs/ex_mem_pipeline_reg.v"	
@@ -10,7 +10,7 @@
 `include "ID_stage/control_unit/control_unit.v"
 `include "EX_stage/alu/alu.v"
 `include "EX_stage/branch/branch_logic.v"
-`include "utils/mux_32b_4to1.v"
+`include "utils/muxs/mux_32b_4to1.v"
 
 `timescale 1ns/100ps
 
@@ -30,11 +30,11 @@ module cpu(
     ////////////////////////////////////////////////////////////////////////
     // Stage 1: Instruction Fetch (IF) 
 
-    wire [31:0] PC_INT_IF, PC__PLUS_4_IF;
+    wire [31:0] PC_INT_IF, PC_PLUS_4_IF;
 
     // PC mux
     mux_32b_2to1 pc_mux(
-        .a(PC__PLUS_4_IF),
+        .a(PC_PLUS_4_IF),
         .b(NEXT_PC_EX),
         .out(PC_INT_IF),
         .sel(PC_MUX_SEL_EX)
@@ -52,7 +52,7 @@ module cpu(
     // PC + 4
     adder_32b_4 pc_plus_4(
         .data(PC_IF),
-        .out(PC__PLUS_4_IF)
+        .out(PC_PLUS_4_IF)
     );
 
     // IF/ID pipeline register

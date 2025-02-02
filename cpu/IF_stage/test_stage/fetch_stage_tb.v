@@ -1,7 +1,7 @@
 `include "./IF_stage/pc/pc.v"
 `include "./pipeline_regs/if_id_pipeline_reg.v"
-`include "./utils/mux_32b_2to1.v"
-`include "./utils/adder_32b_4.v"
+`include "./utils/muxs/mux_32b_2to1.v"
+`include "./utils/adders/adder_32b_4.v"
 `include "./IF_stage/i_mem/imem.v"
 `timescale 1ns/100ps
 
