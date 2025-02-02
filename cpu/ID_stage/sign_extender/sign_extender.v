@@ -1,4 +1,9 @@
-`include "./utils/encordings.v"
+`ifdef TB_RUN
+    `include "../../utils/encordings.v"
+`else
+    `include "./utils/encordings.v"
+`endif
+
 `timescale 1ns/100ps
 
 module sign_extender(inst, imm_sel, imm_ext);
@@ -19,6 +24,7 @@ assign TYPE5 = {inst[31:25], inst[11:7]};
 assign TYPE6 = inst[29:25]; 
 
 always @(*) begin
+    #2
     case (imm_sel[2:0])
         // TYPE 1 
         `IMM_TYPE1:
@@ -28,7 +34,6 @@ always @(*) begin
             if (imm_sel[3] == 1'b1) 
                 imm_ext = {{11{1'b0}}, TYPE2, 1'b0};
             else
-                // TODO
                 imm_ext = {{11{inst[31]}}, inst[31], inst[19:12], inst[20], inst[30:21], 1'b0}; //{{11{TYPE2[19]}}, TYPE2, 1'b0};
         // TYPE 3 
         `IMM_TYPE3:

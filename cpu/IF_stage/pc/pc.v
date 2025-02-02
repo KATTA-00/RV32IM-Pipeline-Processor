@@ -12,7 +12,7 @@ module pc(clk, rst, pc_in, pc_out, busywait);
         end
         else begin
             if (!busywait) begin
-            pc_out <= pc_in;
+                #1 pc_out <= pc_in;
             end
         end
     end

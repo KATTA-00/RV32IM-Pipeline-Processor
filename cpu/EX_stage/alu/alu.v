@@ -1,48 +1,58 @@
-`include "./utils/encordings.v"
+`ifdef TB_RUN
+    `include "../../utils/encordings.v"
+`else
+    `include "./utils/encordings.v"
+`endif
+
 `timescale 1ns/100ps
 
-// ALU module
 module alu(DATA1, DATA2, SELECT, RESULT);
 
-    // initailize input ports
+    // Initialize input ports
     input [31:0] DATA1, DATA2;
-    wire [31:0] UDATA1, UDATA2;
     input [4:0] SELECT;
-    // initailize output ports
-    output reg  [31:0] RESULT;
+    // Initialize output ports
+    output reg [31:0] RESULT;
 
-    // define the wires
+    // Define the wires
     wire [31:0] forwardData, addData, subData, sllData, sltData, sltuData, xorData, srlData, sraData, orData, andData, mulData, mulhData, mulhuData, mulhsuData, divData, divuData, remData, remuData;
 
+    // Assign operations
     assign #1 forwardData = DATA1;
     assign #2 addData = DATA1 + DATA2;
     assign #2 subData = DATA1 - DATA2;
 
-    assign #1 sltData = ($signed(DATA1) < $signed(DATA2))?32'd1:32'd0;
-    assign #1 sltuData = ($unsigned(DATA1) < $unsigned(DATA2))?32'd1:32'd0;
+    assign #1 sltData = ($signed(DATA1) < $signed(DATA2)) ? 32'd1 : 32'd0;
+    assign #1 sltuData = ($unsigned(DATA1) < $unsigned(DATA2)) ? 32'd1 : 32'd0;
 
     assign #1 sllData = DATA1 << DATA2;
     assign #1 srlData = DATA1 >> DATA2;
-    assign #1 sraData = DATA1 >>> DATA2;
+    assign #1 sraData = $signed(DATA1) >>> DATA2; // Fixed SRA
 
     assign #1 xorData = DATA1 ^ DATA2;
     assign #1 orData = DATA1 | DATA2;
     assign #1 andData = DATA1 & DATA2;
     assign #3 mulData = DATA1 * DATA2;
 
-    assign #3 mulhData = (DATA1 * DATA2)>>32;
-    assign #3 mulhsuData = ($signed(DATA1) * $unsigned(DATA2))>>32;
-    assign #3 mulhuData = ($unsigned(DATA1) * $unsigned(DATA2))>>32;
+    // Fixed MULH, MULHSU, MULHU
+    wire [63:0] mulh_temp, mulhsu_temp, mulhu_temp;
+    assign mulh_temp = $signed(DATA1) * $signed(DATA2);
+    assign mulhsu_temp = $signed(DATA1) * $unsigned(DATA2);
+    assign mulhu_temp = $unsigned(DATA1) * $unsigned(DATA2);
+
+    assign #3 mulhData = mulh_temp[63:32];
+    assign #3 mulhsuData = mulhsu_temp[63:32];
+    assign #3 mulhuData = mulhu_temp[63:32];
 
     assign #3 divData = DATA1 / DATA2;
     assign #3 divuData = $unsigned(DATA1) / $unsigned(DATA2);
     assign #3 remData = DATA1 % DATA2;
     assign #3 remuData = $unsigned(DATA1) % $unsigned(DATA2);
 
+    // Select operation based on SELECT signal
     always @(*) 
     begin
-        case(SELECT)
-
+        case (SELECT)
             `ADD: RESULT = addData;
             `SUB: RESULT = subData;
             `SLL: RESULT = sllData;
@@ -62,11 +72,8 @@ module alu(DATA1, DATA2, SELECT, RESULT);
             `REM: RESULT = remData;
             `REMU: RESULT = remuData;
             `FORWARD: RESULT = forwardData;
-
-            default RESULT = 0;
-
+            default: RESULT = 0;
         endcase
-        
     end
 
 endmodule

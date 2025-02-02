@@ -34,8 +34,8 @@ module cpu(
 
     // PC mux
     mux_32b_2to1 pc_mux(
-        .a(PC_PLUS_4_IF),
-        .b(NEXT_PC_EX),
+        .data1(PC_PLUS_4_IF),
+        .data2(NEXT_PC_EX),
         .out(PC_INT_IF),
         .sel(PC_MUX_SEL_EX)
     );
@@ -163,16 +163,16 @@ module cpu(
 
     // ALU DATA1 mux
     mux_32b_2to1 alu_mux_1(
-        .a(DATA1_EX),
-        .b(PC_EX),
+        .data1(DATA1_EX),
+        .data2(PC_EX),
         .out(ALU_DATA1_EX),
         .sel(DATA1_ALU_SEL_EX)
     );
 
     // ALU DATA2 mux
     mux_32b_2to1 alu_mux_2(
-        .a(DATA2_EX),
-        .b(IMM_EX),
+        .data1(DATA2_EX),
+        .data2(IMM_EX),
         .out(ALU_DATA2_EX),
         .sel(DATA2_ALU_SEL_EX)
     );
@@ -274,10 +274,10 @@ module cpu(
 
     // WB mux
     mux_32b_4to1 wb_mux(
-        .a(ALU_OUT_WB),
-        .b(DMEM_DATA_READ_WB),
-        .c(PC_WB),
-        .d(IMM_WB),
+        .data1(ALU_OUT_WB),
+        .data2(DMEM_DATA_READ_WB),
+        .data3(PC_WB),
+        .data4(IMM_WB),
         .out(WRITE_DATA_WB),
         .sel(WB_SEL_WB)
     );

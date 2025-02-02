@@ -1,5 +1,7 @@
-`include "./utils/encordings.v"
-`include "./ID_stage/control_unit/control_unit.v"
+`define TB_RUN
+
+`include "../../utils/encordings.v"
+`include "../../ID_stage/control_unit/control_unit.v"
 `timescale 1ns/100ps
 
 module control_unit_tb;

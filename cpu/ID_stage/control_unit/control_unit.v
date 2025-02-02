@@ -1,5 +1,13 @@
-`include "./utils/muxs/mux_3b_2to1.v"
-`include "./utils/encordings.v"
+`ifdef TB_RUN
+    `include "../../utils/muxs/mux_3b_2to1.v"
+    `include "../../utils/encordings.v"
+`else
+    `include "./utils/muxs/mux_3b_2to1.v"
+    `include "./utils/encordings.v"
+`endif
+
+// Need to check the logic
+
 `timescale 1ns/100ps
 
 module control_unit(opcode, funct3, funct7, alu_op, reg_write_en, mem_write, mem_read, branch_jump, imm_sel, data1_alu_sel, data2_alu_sel, wb_sel, reset);
@@ -28,7 +36,7 @@ module control_unit(opcode, funct3, funct7, alu_op, reg_write_en, mem_write, mem
     assign #3 alu_op[3] = ({opcode, funct7} == {`OP_R_TYPE, 7'b0000001}) | (opcode == `OP_LUI);  // if MUL_inst or LUI
     
     // Register file write signal geraration
-    assign #3 reg_write_en = ~((opcode == `OP_STORE) | (opcode == `OP_BRANCH) | (opcode == 7'b0000000)) ;    
+    assign #3 reg_write_en = ~((opcode == `OP_STORE) | (opcode == `OP_BRANCH) | (opcode == 7'b0000000) | reset); // if S_inst, B_inst, NOP, reset;    
 
     // Main memory write signal genaration
     assign #3 mem_write[2] = (opcode == `OP_STORE);

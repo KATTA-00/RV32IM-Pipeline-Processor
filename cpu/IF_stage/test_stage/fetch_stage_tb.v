@@ -1,8 +1,10 @@
-`include "./IF_stage/pc/pc.v"
-`include "./pipeline_regs/if_id_pipeline_reg.v"
-`include "./utils/muxs/mux_32b_2to1.v"
-`include "./utils/adders/adder_32b_4.v"
-`include "./IF_stage/i_mem/imem.v"
+`define TB_RUN 
+
+`include "../pc/pc.v"
+`include "../../pipeline_regs/if_id_pipeline_reg.v"
+`include "../../utils/muxs/mux_32b_2to1.v"
+`include "../../utils/adders/adder_32b_4.v"
+`include "../imem/imem.v"
 `timescale 1ns/100ps
 
 module fetch_stage_tb;
@@ -18,8 +20,8 @@ module fetch_stage_tb;
     );
 
     mux_32b_2to1 pc_mux(
-        .a(pc_ex), 
-        .b(pc_ex), 
+        .data1(pc_ex), 
+        .data2(pc_ex), 
         .sel(pc_sel_ex), 
         .out(pc_mux_out)
     );

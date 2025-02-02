@@ -1,5 +1,9 @@
+`define TB_RUN
+
 `include "alu.v"
 `timescale 1ns/100ps
+
+// Define a macro to switch include paths based on a manually set flag
 
 module alu_tb;
 
