@@ -4,10 +4,13 @@
 `include "pipeline_regs/if_id_pipeline_reg.v"
 `include "pipeline_regs/id_ex_pipeline_reg.v"
 `include "pipeline_regs/ex_mem_pipeline_reg.v"	
-`include "pipeline_regs/ma_wb_pipeline_reg.v"
+`include "pipeline_regs/mem_wb_pipeline_reg.v"
 `include "ID_stage/reg_files/reg_files.v"
 `include "ID_stage/sign_extender/sign_extender.v"
 `include "ID_stage/control_unit/control_unit.v"
+`include "EX_stage/alu/alu.v"
+`include "EX_stage/branch/branch_logic.v"
+`include "utils/mux_32b_4to1.v"
 
 `timescale 1ns/100ps
 
@@ -150,28 +153,133 @@ module cpu(
     ////////////////////////////////////////////////////////////////////////
     // Stage 3: Execute (EX)
     wire PC_MUX_SEL_EX;
-    wire [31:0] NEXT_PC_EX, PC_EX, DATA1_EX, DATA2_EX, IMM_EX;
+    wire [31:0] NEXT_PC_EX, PC_EX, DATA1_EX, DATA2_EX, IMM_EX, ALU_OUT_EX, ALU_DATA1_EX, ALU_DATA2_EX;
     wire [3:0] IMM_SEL_EX;
     wire [4:0] ALU_OP_EX, WADDR_EX;
     wire [2:0] MEM_WRITE_EX, BRANCH_JUMP_EX;
     wire [3:0] MEM_READ_EX;
     wire [1:0] WB_SEL_EX;
     wire DATA1_ALU_SEL_EX, DATA2_ALU_SEL_EX, WRITE_EN_EX;
-    
 
+    // ALU DATA1 mux
+    mux_32b_2to1 alu_mux_1(
+        .a(DATA1_EX),
+        .b(PC_EX),
+        .out(ALU_DATA1_EX),
+        .sel(DATA1_ALU_SEL_EX)
+    );
+
+    // ALU DATA2 mux
+    mux_32b_2to1 alu_mux_2(
+        .a(DATA2_EX),
+        .b(IMM_EX),
+        .out(ALU_DATA2_EX),
+        .sel(DATA2_ALU_SEL_EX)
+    );
+
+    // ALU
+    alu alu_inst(
+        .DATA1(ALU_DATA1_EX),
+        .DATA2(ALU_DATA2_EX),
+        .SELECT(ALU_OP_EX),
+        .RESULT(ALU_OUT_EX)
+    );
+
+    // Branch/Jump Logic
+    branch_logic branch_logic_inst(
+        .data1(DATA1_EX),
+        .data2(DATA2_EX),
+        .op(BRANCH_JUMP_EX),
+        .out(PC_MUX_SEL_EX)
+    );
+
+    // EX/MA pipeline register
+    ex_mem_pipeline_reg ex_mem_pipeline_reg_inst(
+        .clk(CLK),
+        .rst(RST),
+        .reg_write_in(WRITE_EN_EX),
+        .reg_write_out(WRITE_EN_MA),
+        .pc_in(PC_EX),
+        .pc_out(PC_MA),
+        .alu_result_in(ALU_OUT_EX),
+        .alu_result_out(ALU_OUT_MA),
+        .read_data2_in(DATA2_EX),
+        .read_data2_out(DATA2_MA),
+        .imm_in(IMM_EX),
+        .imm_out(IMM_MA),
+        .dest_addr_in(WADDR_EX),
+        .dest_addr_out(WADDR_MA),
+        .mem_write_in(MEM_WRITE_EX),
+        .mem_write_out(MEM_WRITE_MA),
+        .mem_read_in(MEM_READ_EX),
+        .mem_read_out(MEM_READ_MA),
+        .wb_sel_in(WB_SEL_EX),
+        .wb_sel_out(WB_SEL_MA),
+        .busywait(BUSYWAIT)
+    );
 
 
     ////////////////////////////////////////////////////////////////////////
     // Stage 4: Memory Access (MEM)
 
+    wire [31:0] PC_MA, ALU_OUT_MA, IMM_MA, DATA2_MA, PC_PLUS_4_MA;
+    wire [4:0] WADDR_MA;
+    wire [1:0] WB_SEL_MA;
+    wire WRITE_EN_MA;
+    wire [2:0] MEM_WRITE_MA;
+    wire [3:0] MEM_READ_MA;
 
+    // PC plus 4
+    adder_32b_4 pc_plus_4_ma(
+        .data(PC_MA),
+        .out(PC_PLUS_4_MA)
+    );
+
+    // Memeory Access
+    assign DMEM_ADDR_MA = ALU_OUT_MA;
+    assign DMEM_DATA_WRITE_MA = DATA2_MA;
+    assign DMEM_READ_MA = MEM_READ_MA;
+    assign DMEM_WRITE_MA = MEM_WRITE_MA;
+
+
+    // MA/WB pipeline register
+    mem_wb_pipeline_reg mem_wb_pipeline_reg_inst(
+        .clk(CLK),
+        .rst(RST),
+        .reg_write_in(WRITE_EN_MA),
+        .reg_write_out(WRITE_EN_WB),
+        .pc_in(PC_MA),
+        .pc_out(PC_WB),
+        .mem_data_in(DMEM_DATA_READ_MA),
+        .mem_data_out(DMEM_DATA_READ_WB),
+        .alu_result_in(ALU_OUT_MA),
+        .alu_result_out(ALU_OUT_WB),
+        .imm_in(IMM_MA),
+        .imm_out(IMM_WB),
+        .dest_addr_in(WADDR_MA),
+        .dest_addr_out(WADDR_WB),
+        .wb_sel_in(WB_SEL_MA),
+        .wb_sel_out(WB_SEL_WB),
+        .busywait(BUSYWAIT)
+    );
 
     ////////////////////////////////////////////////////////////////////////
     // Stage 5: Write Back (WB)
 
     wire [31:0] WRITE_DATA_WB;
+    wire [31:0] PC_WB, ALU_OUT_WB, DMEM_DATA_READ_WB, IMM_WB;
+    wire [1:0] WB_SEL_WB;
     wire [4:0] WADDR_WB;
     wire WRITE_EN_WB;
 
+    // WB mux
+    mux_32b_4to1 wb_mux(
+        .a(ALU_OUT_WB),
+        .b(DMEM_DATA_READ_WB),
+        .c(PC_WB),
+        .d(IMM_WB),
+        .out(WRITE_DATA_WB),
+        .sel(WB_SEL_WB)
+    );
 
 endmodule
