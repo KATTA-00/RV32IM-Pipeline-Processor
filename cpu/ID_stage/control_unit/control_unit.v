@@ -6,8 +6,6 @@
     `include "./utils/encordings.v"
 `endif
 
-// Need to check the logic
-
 `timescale 1ns/100ps
 
 module control_unit(opcode, funct3, funct7, alu_op, reg_write_en, mem_write, mem_read, branch_jump, imm_sel, data1_alu_sel, data2_alu_sel, wb_sel, reset);
@@ -32,7 +30,10 @@ module control_unit(opcode, funct3, funct7, alu_op, reg_write_en, mem_write, mem
     // ALU control signal genaration
     assign #3 funct3_mux_select = (opcode == `OP_AUIPC) | (opcode == `OP_JAL) | (opcode == `OP_STORE) | (opcode == `OP_LOAD) | (opcode == `OP_BRANCH);
     mux_3b_2to1 funct3_mux (funct3, 3'b000, alu_op[2:0], funct3_mux_select);   
-    assign #3 alu_op[4] = ({opcode, funct3, funct7} == {`OP_I_TYPE, 3'b101, 7'b0100000}) | ({opcode, funct3, funct7} == {`OP_R_TYPE, 3'b000, 7'b0100000}) | ({opcode, funct3, funct7} == {`OP_R_TYPE, 3'b101, 7'b0100000}) | (opcode == `OP_LUI);// if SRAI, SUB, SRA, LUI
+    assign #3 alu_op[4] = ({opcode, funct3, funct7} == {`OP_I_TYPE, 3'b101, 7'b0100000}) | // SRAI
+                          ({opcode, funct3, funct7} == {`OP_R_TYPE, 3'b000, 7'b0100000}) | // SUB
+                          ({opcode, funct3, funct7} == {`OP_R_TYPE, 3'b101, 7'b0100000}) | // SRA
+                          (opcode == `OP_LUI); // LUI
     assign #3 alu_op[3] = ({opcode, funct7} == {`OP_R_TYPE, 7'b0000001}) | (opcode == `OP_LUI);  // if MUL_inst or LUI
     
     // Register file write signal geraration
@@ -70,7 +71,6 @@ module control_unit(opcode, funct3, funct7, alu_op, reg_write_en, mem_write, mem
 
     // operand 1 and 2 signal genaration
     assign #3 data1_alu_sel = (opcode == `OP_AUIPC) | (opcode == `OP_JAL) | (opcode == `OP_JALR) | (opcode == `OP_BRANCH); // if AUIPC, JAL, JALR
-    //TODO: test the dont care condition.
     assign #3 data2_alu_sel = (opcode == `OP_LOAD) | // all L_inst
                               (opcode == `OP_I_TYPE) | //immediate_inst
                               (opcode == `OP_AUIPC) | //AUIPC
